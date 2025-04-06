@@ -1,103 +1,118 @@
+"use client"
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
 import Image from "next/image";
+import { ChevronLeftIcon, ChevronRightIcon, MinusIcon, PlusIcon } from "lucide-react";
+interface Spending {
+  date: Date
+  cost: number
+  category: number
+}
 
-export default function Home() {
+const categories = {
+  0: "MAKAN MINUM",
+  1: "UTILITY",
+  2: "ENTERTAINMENT",
+  3: "CHARITY"
+}
+
+const maxIndex = Object.keys(categories).length - 1
+
+function getCategory(index: number): string {
+  if (index < 0) {
+    return categories[0]
+  }
+  if (index > 3) {
+    return categories[3]
+  }
+  return categories[index as keyof typeof categories]
+}
+
+
+export default function App() {
+  const [spending, setSpending] = useState<Spending[]>([])
+  const [cost, setCost] = useState(50000)
+  const [spendingType, setSpendingType] = useState<number>(0)
+
+  function submit() {
+    setSpending([...spending, { cost: cost, category: spendingType, date: new Date() }])
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
+    <div className="flex flex-col items-center justify-center w-96 space-y-4 p-4 mx-auto mt-12">
+      <div className="flex flex-col items-center justify-center">
+        <Image src="/logo.png" alt="Duitku" width={100} height={100} />
+        <h1 className="text-4xl font-bold">Duitku</h1>
+        <small>cukup pilih angka sama kategorinya, trus simpen deh!</small>
+      </div>
+      <div className="flex flex-col space-y-2">
+        <div className="flex items-center justify-between space-x-2">
+          <Button onClick={() => setCost(cost - 10000)}>
+            <MinusIcon />
+          </Button>
+          <Button size="sm" onClick={() => setCost(cost - 1000)}>
+            <MinusIcon />
+          </Button>
+          <div className="relative">
+            <Input
+              type="text"
+              value={cost.toLocaleString("id-ID")}
+              onChange={(e: { target: { value: string } }) => {
+                const numericValue = Number(e.target.value.replace(/\D/g, ""));
+                setCost(numericValue);
+              }}
+              className="border-2 border-gray-300 rounded-md p-2"
             />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+          </div>
+          <Button size="sm" onClick={() => setCost(cost + 1000)}>
+            <PlusIcon />
+          </Button>
+          <Button onClick={() => setCost(cost + 10000)}>
+            <PlusIcon />
+          </Button>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        <div className="flex items-center justify-between space-x-2">
+          <Button
+            onClick={() =>
+              setSpendingType(spendingType === 0 ? 3 : spendingType - 1)
+            }
+          >
+            <ChevronLeftIcon />
+          </Button>
+          <select
+            value={spendingType}
+            onChange={(e) => setSpendingType(Number(e.target.value))}
+            className="border-2 border-gray-300 rounded-md p-2 w-full"
+          >
+            {Object.entries(categories).map(([key, value]) => (
+              <option key={key} value={key}>
+                {value}
+              </option>
+            ))}
+          </select>
+          <Button
+            onClick={() =>
+              setSpendingType(spendingType === maxIndex ? 0 : spendingType + 1)
+            }
+          >
+            <ChevronRightIcon />
+          </Button>
+        </div>
+      </div>
+      <Button onClick={() => submit()} className="w-full">
+        Simpan
+      </Button>
+      <div className="flex flex-col items-center justify-center p-2">
+        {spending.map((spending: Spending, i: number) => (
+          <div key={spending.date.toLocaleDateString() + i}>
+            <span className="p-2">{spending.date.toLocaleDateString()}</span>
+            <span className="p-2">{spending.cost.toLocaleString("id-ID")}</span>
+            <span className="p-2">{getCategory(spending.category)}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
