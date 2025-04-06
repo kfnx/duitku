@@ -42,7 +42,7 @@ export default function App() {
 
   return (
     <div className="flex flex-col items-center justify-center w-96 space-y-4 p-4 mx-auto mt-12">
-      <div className="flex flex-col items-center justify-center">
+      <div className="flex flex-col items-center justify-center mb-12">
         <Image src="/logo.png" alt="Duitku" width={100} height={100} />
         <h1 className="text-4xl font-bold">Duitku</h1>
         <small>cukup pilih angka sama kategorinya, trus simpen deh!</small>
@@ -73,6 +73,7 @@ export default function App() {
             <PlusIcon />
           </Button>
         </div>
+        <small className="mx-auto">dipake buat:</small>
         <div className="flex items-center justify-between space-x-2">
           <Button
             onClick={() =>
@@ -102,8 +103,12 @@ export default function App() {
         </div>
       </div>
       <Button onClick={() => submit()} className="w-full">
-        Simpan
+        Simpen
       </Button>
+      <div className="flex flex-col items-center justify-center p-2">
+        <small>Pengeluaran hari ini:</small>
+        <span className="p-2">{spending.filter((spending: Spending) => spending.date.toLocaleDateString() === new Date().toLocaleDateString()).reduce((acc, curr) => acc + curr.cost, 0).toLocaleString("id-ID")}</span>
+      </div>
       <div className="flex flex-col items-center justify-center p-2">
         {spending.map((spending: Spending, i: number) => (
           <div key={spending.date.toLocaleDateString() + i}>
@@ -113,6 +118,10 @@ export default function App() {
           </div>
         ))}
       </div>
+
+      <footer className="flex flex-row items-center justify-center p-2 mt-28">
+        built by <a href="https://x.com/kafinsm" target="_blank" rel="noopener noreferrer" className="pl-2">@kafinsm</a>
+      </footer>
     </div>
   );
 }
